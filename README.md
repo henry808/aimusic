@@ -1,6 +1,25 @@
 # aimusic
 
+# Description
+Creating music from character
 
+
+# Install condo packages
+
+```bash
+conda create -n myenv python=3.8  # Replace "myenv" with your preferred environment name
+conda activate myenv  # Activate the environment
+conda install -c cogsci pygame
+conda install numpy
+# conda install -c anaconda sounddevice
+# pip install sounddevice
+conda install -c conda-forge python-sounddevice
+```
+
+
+
+# Author
+Henry Grantham
 
 ## Getting started
 
@@ -51,8 +70,7 @@ When you're ready to make this README your own, just edit this file and use the 
 ## Suggestions for a good README
 Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
 
-## Name
-Choose a self-explaining name for your project.
+
 
 ## Description
 Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
