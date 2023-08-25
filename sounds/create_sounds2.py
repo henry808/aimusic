@@ -1,5 +1,4 @@
-from pyo import Server, Adsr, Sine, PinkNoise
-import time
+from pyo import *
 
 # Initialize the audio server
 s = Server().boot()
@@ -26,9 +25,9 @@ def create_plucked_string():
 
 # Sound 3: Noise Burst with Envelope
 def create_noise_burst_with_envelope():
-    dur3 = 5     # Duration in seconds (adjust as needed)
+    dur3 = 1     # Duration in seconds
     
-    env3 = Adsr(attack=0.5, decay=0.5, sustain=0.5, release=0.5)  # Adjust envelope times
+    env3 = Adsr(attack=0.01, decay=0.1, sustain=0.1, release=0.01)
     noise_burst = PinkNoise(mul=env3)
     
     return noise_burst
