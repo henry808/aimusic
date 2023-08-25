@@ -24,65 +24,76 @@ def create_kick_drum(duration_ms):
     Create a simple kick drum sound.
     """
     # Initial and final frequencies for our kick drum sound
-    start_frequency = 150  # Start from a higher frequency
-    end_frequency = 50     # Drop to a lower frequency
-    
+    start_frequency = 150.0 / 2.0  # Start from a higher frequency
+    end_frequency = 50.0 / 2.0     # Drop to a lower frequency
+
+    # Create the attack (click) component using white noise
+    click_duration = int(duration_ms * 0.05)  # 5% of total duration
+    click = WhiteNoise().to_audio_segment(duration=click_duration)
+    click = click - 10  # Reduce the volume for the click
+
     # Generate the initial sine wave at the start frequency
     sine_kick = Sine(start_frequency).to_audio_segment(duration=duration_ms)
-    
+
     # Create a frequency sweep (pitch envelope) from the start to end frequency
-    # This is a simple method to simulate the characteristic of a kick drum where the pitch drops rapidly.
     for i in range(duration_ms):
         # Calculate frequency drop ratio
         ratio = i / duration_ms
-        frequency = start_frequency - ratio * (start_frequency - end_frequency)
-        
+        frequency = start_frequency + ratio * (end_frequency - start_frequency)
+
         # Overlay the sine wave segment with the adjusted frequency
         sine_segment = Sine(frequency).to_audio_segment(duration=1)  # 1ms segment
         sine_kick = sine_kick.overlay(sine_segment, position=i)
-    
+
+    # Combine the click and sine_kick
+    combined_kick = click.overlay(sine_kick)
+
+    # Reduce the amplitude of the kick body to 60% 
+    reduced_kick = combined_kick - 4.44  # This is an approximation for 60% amplitude
+
     # The generated sound might be a bit quiet, so let's increase its volume (amplify it)
-    amplified_kick = sine_kick + 6  # Increase volume by 6dB, adjust as needed
-    
+    amplified_kick = reduced_kick + 6  # Increase volume by 6dB, adjust as needed
+
     return amplified_kick
+
 
 def create_snare_drum(duration_ms):
     """
     Create a synthetic snare drum sound.
     """
-    
+
     # Snare drum parameters
     # ---------------------
-    
+
     # The noise component provides the characteristic "snap" of the snare
     noise_duration = int(duration_ms * 0.4)  # Duration of the noise segment (adjust for more/less "snap")
-    
+
     # The body provides the tonal component of the snare
     body_frequency = 180  # This frequency gives a bit of the "body" of the snare. Adjust as needed.
-    
+
     # Create components of the snare sound
     # ------------------------------------
-    
+
     # Generate the noise segment for the snare
     noise_segment = WhiteNoise().to_audio_segment(duration=noise_duration)
-    
+
     # Generate the tonal "body" of the snare using a sine wave
-    body_segment = Sine(body_frequency).to_audio_segment(duration=duration_ms)
-    
+    body_segment = Sine(body_frequency).to_audio_segment(duration=duration_ms * 0.6)
+
     # Adjust volumes to make noise more prominent and the body less so (adjust as needed)
     amplified_noise = noise_segment + 5  # Amplify the noise by 5dB
     attenuated_body = body_segment - 5   # Reduce the volume of the body by 5dB
-    
+
     # Combine the noise and body
     # --------------------------
-    
+
     # Overlay the amplified noise on top of the attenuated body
     # Start the noise segment at the beginning of the body segment
     snare_combined = attenuated_body.overlay(amplified_noise, position=0)
-    
+
     # The result might be too quiet or too loud, so adjust volume if needed
     amplified_snare = snare_combined + 2  # Increase volume by 2dB (adjust as needed)
-    
+
     return amplified_snare
 
 def create_white_noise(duration_ms):
@@ -205,11 +216,11 @@ song_structure = [
 def generate_song(song_structure, track_to_play=None):
     """
     Generates a song based on the provided song structure.
-    
+
     Parameters:
     - song_structure: List of (block, repetitions) pairs defining the song.
     - track_to_play: If provided, only this track will be included in the final song.
-    
+
     Returns:
     - AudioSegment containing the constructed song.
     """
@@ -231,7 +242,7 @@ def generate_song(song_structure, track_to_play=None):
 song = AudioSegment.empty()
 
 # full_song = generate_song(song_structure)
-full_song = generate_song(song_structure, track_to_play="snare")
+full_song = generate_song(song_structure, track_to_play="kick")
 
 # You can save and play each version as needed:
 wav_path = os.path.join(os.path.expanduser("~"), "Downloads", "my_song.wav")
