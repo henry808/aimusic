@@ -14,6 +14,17 @@ conda install numpy
 # conda install -c anaconda sounddevice
 # pip install sounddevice
 conda install -c conda-forge python-sounddevice
+
+
+
+conda install pip
+pip -V
+pip install pyo
+
+
+conda install -c conda-forge pydub
+conda install -c anaconda pyaudio
+conda install -c conda-forge ffmpeg
 ```
 
 
